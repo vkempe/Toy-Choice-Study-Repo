@@ -442,20 +442,12 @@ function submitData() {
     fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
+        keepalive: true,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
-    })
-    .then(() => {
-        showScreen('screen-thankyou');
-    })
-    .catch(err => {
-        console.error("Submission error:", err);
-        if (btn) {
-            btn.disabled = false;
-            btn.textContent = "Submit my data & finish";
-        }
-        showScreen('screen-error');
     });
+
+    showScreen('screen-thankyou');
 }
 </script>
 
