@@ -21,8 +21,6 @@ input[type="radio"], input[type="checkbox"] { margin-right: 8px; }
 input[type="number"], input[type="text"], select { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em; margin-bottom: 10px; width: 100%; max-width: 300px; }
 .form-group { margin-bottom: 20px; }
 .form-group label.heading { font-weight: bold; margin-bottom: 10px; display: block; cursor: default; }
-
-/* Trial display */
 .trial-instruction { text-align: center; font-size: 1.3em; color: #2c3e50; margin-bottom: 25px; padding: 15px; background: #eaf2f8; border-radius: 8px; }
 .trial-progress { text-align: center; color: #7f8c8d; margin-bottom: 15px; font-size: 0.9em; }
 .trial-pair { display: flex; justify-content: center; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
@@ -30,23 +28,14 @@ input[type="number"], input[type="text"], select { padding: 8px 12px; border: 1p
 .toy-option:hover { border-color: #3498db; background: #f0f8ff; }
 .toy-option img { max-width: 220px; max-height: 220px; object-fit: contain; margin-bottom: 10px; }
 .toy-option .toy-label { font-size: 1.1em; font-weight: 500; color: #2c3e50; }
-
-/* Block intro */
 .block-intro { text-align: center; padding: 30px; }
 .block-intro h2 { font-size: 1.5em; margin-bottom: 20px; }
 .block-intro p { font-size: 1.1em; }
-
-/* Debrief */
 .debrief { line-height: 1.8; }
-
-/* Consent checkboxes */
 .consent-items { margin: 20px 0; }
 .consent-items label { padding: 8px 0; }
-
-/* Thank you */
 .thankyou { text-align: center; padding: 40px 20px; }
 .thankyou h1 { font-size: 2em; color: #27ae60; }
-
 .error { color: #e74c3c; font-size: 0.9em; margin-top: 5px; display: none; }
 .error.show { display: block; }
 </style>
@@ -78,7 +67,7 @@ input[type="number"], input[type="text"], select { padding: 8px 12px; border: 1p
 <p>Your responses are anonymous and stored securely. No personally identifying information is collected. Data will be used for academic purposes only and may be included in an Honours dissertation and related publications. Data will be retained in accordance with Abertay University data management policy.</p>
 
 <h2>Contact</h2>
-<p>If you have any questions, please contact 2206588@abertay.ac.uk or v.kempe@abertay.ac.uk.</p>
+<p>If you have any questions, please contact 2206588@abertay.ac.uk or <a href="mailto:v.kempe@abertay.ac.uk">v.kempe@abertay.ac.uk</a>.</p>
 
 <hr style="margin: 25px 0;">
 <h2>Consent</h2>
@@ -160,19 +149,21 @@ input[type="number"], input[type="text"], select { padding: 8px 12px; border: 1p
 <p>Research suggests that adults&rsquo; toy choices for children can reinforce gender stereotypes from an early age. Understanding the degree to which prospective parents show these biases &mdash; and whether this differs between men and women &mdash; can inform discussions about gendered socialisation.</p>
 <p><strong>Your data</strong></p>
 <p>Your responses are fully anonymous. If you would like to withdraw your data, please close this page now and your responses will not be submitted. By clicking the button below, your anonymous data will be submitted.</p>
-<p>If you have any questions about this study, please contact 2206588@abertay.ac.uk or v.kempe@abertay.ac.uk.</p>
+<p>If you have any questions about this study, please contact 2206588@abertay.ac.uk or <a href="mailto:v.kempe@abertay.ac.uk">v.kempe@abertay.ac.uk</a>.</p>
 </div>
 <button class="btn" onclick="submitData()">Submit my data &amp; finish</button>
 </div>
 
 <!-- SCREEN 7: Thank you -->
+<div class="screen" id="screen-thankyou">
 <div class="thankyou">
 <h1>Thank you!</h1>
-<p style="font-size:1.2em; margin-top:20px;">Your data is being submitted — this may take a moment. Please do not close this page yet.</p>
-<p id="close-msg" style="font-size:1.2em; margin-top:15px; color:#27ae60; display:none;">Your responses have been recorded. You may now close this page.</p>
+<p style="font-size:1.2em; margin-top:20px;">Your data is being submitted &mdash; this may take a moment. Please do not close this page yet.</p>
+<p id="close-msg" style="font-size:1.2em; margin-top:15px; color:#27ae60; display:none;">&#10004; Your responses have been recorded. You may now close this page.</p>
+</div>
 </div>
 
-<!-- SCREEN: Submission error -->
+<!-- SCREEN 8: Submission error -->
 <div class="screen" id="screen-error">
 <div class="thankyou">
 <h1 style="color:#e74c3c;">Submission Error</h1>
@@ -184,7 +175,7 @@ input[type="number"], input[type="text"], select { padding: 8px 12px; border: 1p
 
 <script>
 // ============================================================
-// CONFIGURATION — UPDATE THIS URL AFTER SETTING UP GOOGLE SHEETS
+// CONFIGURATION
 // ============================================================
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxzaGoXYFfa5VIKu4SB4MKLNr0IQN_4chbjpjQNfpgKHAzozDsG1kSVlTo0S1hBbci0/exec";
 
@@ -205,8 +196,7 @@ const TRIADS = [
     ["M7","F7","N7"], ["M8","F8","N8"], ["M9","F9","N9"]
 ];
 
-// Version definitions: which pair type each triad contributes
-// MF = M vs F, MN = M vs N, FN = F vs N
+// Version definitions
 const VERSIONS = {
     A: ["MF","MF","MF","MN","MN","MN","FN","FN","FN"],
     B: ["MN","MN","MN","FN","FN","FN","MF","MF","MF"],
@@ -217,24 +207,21 @@ const VERSIONS = {
 // STATE
 // ============================================================
 let participantId = Date.now().toString(36) + Math.random().toString(36).substr(2,5);
-let version = "";       // A, B, or C
-let blockOrder = "";    // "son_first" or "daughter_first"
-let currentBlock = 0;   // 0 or 1
+let version = "";
+let blockOrder = "";
+let currentBlock = 0;
 let currentTrial = 0;
-let trials = [];        // current block's trials
-let allResponses = [];  // all trial data
+let trials = [];
+let allResponses = [];
 let demographics = {};
-let blockLabels = [];   // e.g. ["son","daughter"] or ["daughter","son"]
+let blockLabels = [];
 
 // ============================================================
 // INITIALIZATION
 // ============================================================
 function init() {
-    // Random version
     const versions = ["A","B","C"];
     version = versions[Math.floor(Math.random() * 3)];
-
-    // Random block order
     blockOrder = Math.random() < 0.5 ? "son_first" : "daughter_first";
     blockLabels = blockOrder === "son_first" ? ["son","daughter"] : ["daughter","son"];
 }
@@ -247,23 +234,21 @@ function generateTrials() {
     const pairTypes = VERSIONS[version];
     let t = [];
     for (let i = 0; i < 9; i++) {
-        const triad = TRIADS[i]; // [M, F, N]
+        const triad = TRIADS[i];
         const pt = pairTypes[i];
         let left, right, pairType;
         if (pt === "MF") {
             left = triad[0]; right = triad[1]; pairType = "MF";
         } else if (pt === "MN") {
             left = triad[0]; right = triad[2]; pairType = "MN";
-        } else { // FN
+        } else {
             left = triad[1]; right = triad[2]; pairType = "FN";
         }
-        // Randomise left-right
         if (Math.random() < 0.5) {
             [left, right] = [right, left];
         }
         t.push({ triad: i+1, pairType, left, right });
     }
-    // Shuffle trial order
     for (let i = t.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [t[i], t[j]] = [t[j], t[i]];
@@ -350,7 +335,6 @@ function startBlock() {
 
 function showTrial() {
     if (currentTrial >= trials.length) {
-        // Block finished
         if (currentBlock === 0) {
             showScreen('screen-between');
         } else {
@@ -367,7 +351,7 @@ function showTrial() {
 
     document.getElementById('trial-instruction').textContent = instruction;
     document.getElementById('trial-progress').textContent =
-        `Section ${currentBlock+1} of 2 — Choice ${currentTrial+1} of ${trials.length}`;
+        `Section ${currentBlock+1} of 2 \u2014 Choice ${currentTrial+1} of ${trials.length}`;
 
     const pairDiv = document.getElementById('trial-pair');
     pairDiv.innerHTML = '';
@@ -431,11 +415,10 @@ function submitData() {
         responses: allResponses
     };
 
-    // Show loading state
     const btn = document.querySelector('#screen-debrief .btn');
     if (btn) {
         btn.disabled = true;
-        btn.textContent = "Submitting...";
+        btn.textContent = "Submitting \u2014 please wait...";
     }
 
     fetch(GOOGLE_SCRIPT_URL, {
@@ -447,6 +430,7 @@ function submitData() {
     });
 
     showScreen('screen-thankyou');
+    setTimeout(() => { document.getElementById('close-msg').style.display = 'block'; }, 5000);
 }
 </script>
 
